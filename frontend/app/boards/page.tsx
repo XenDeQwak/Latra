@@ -107,7 +107,7 @@ export default function BoardsPage() {
               <h1 className="text-white text-3xl font-bold tracking-tight">My Workspace</h1>
               <p className="text-slate-400 text-sm mt-1.5">
                 {boards.length === 0
-                  ? 'No boards yet — create your first one'
+                  ? 'No boards yet - create your first one'
                   : `${boards.length} board${boards.length !== 1 ? 's' : ''}`}
               </p>
             </div>

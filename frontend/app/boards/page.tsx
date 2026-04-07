@@ -69,7 +69,10 @@ export default function BoardsPage() {
   if (isLoading || fetching) {
     return (
       <div className="min-h-screen bg-[#1d2d44] flex items-center justify-center">
-        <span className="text-white/60 text-sm">Loading…</span>
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-white/20 border-t-white rounded-full animate-spin" />
+          <span className="text-white/60 text-sm">Loading boards…</span>
+        </div>
       </div>
     );
   }
@@ -86,30 +89,32 @@ export default function BoardsPage() {
 
   return (
     <div className="min-h-screen bg-[#1d2d44] px-8 py-10">
-      <h1 className="text-white text-xl font-bold mb-6">Your Boards</h1>
+      <h1 className="text-white text-xl font-bold mb-6 animate-fade-in">Your Boards</h1>
 
       <div className="flex flex-wrap gap-4">
-        {boards.map((board) => (
+        {boards.map((board, i) => (
           <Link
             key={board.id}
             href={`/boards/${board.id}`}
             aria-label={`Open board: ${board.title}`}
-            className={`group relative w-48 h-28 rounded-lg cursor-pointer ${palette[board.id % palette.length]} flex flex-col justify-between p-3 hover:brightness-110 transition`}
+            style={{ animationDelay: `${i * 60}ms` }}
+            className={`animate-slide-up group relative w-48 h-28 rounded-xl cursor-pointer ${palette[board.id % palette.length]} flex flex-col justify-between p-3 hover:scale-105 hover:shadow-xl transition-all duration-200`}
           >
-            <div className="flex items-start justify-between">
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-black/10 pointer-events-none" />
+            <div className="relative flex items-start justify-between">
               <span className="text-white font-bold text-sm leading-snug line-clamp-2 flex-1">
                 {board.title}
               </span>
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(board.id); }}
-                className="opacity-0 group-hover:opacity-100 text-white/70 hover:text-white transition-all text-xs ml-1 shrink-0"
+                className="opacity-0 group-hover:opacity-100 text-white/70 hover:text-white active:scale-95 transition-all text-xs ml-1 shrink-0"
                 aria-label="Delete board"
               >
                 ✕
               </button>
             </div>
             {board.users && board.users.length > 0 && (
-              <div className="flex -space-x-1">
+              <div className="relative flex -space-x-1">
                 {board.users.slice(0, 4).map((u) => (
                   <span
                     key={u.id}
@@ -127,15 +132,17 @@ export default function BoardsPage() {
         {/* + New Board tile */}
         <button
           onClick={() => setShowCreate(true)}
-          className="w-48 h-28 rounded-lg bg-white/20 hover:bg-white/30 border-2 border-dashed border-white/40 flex items-center justify-center text-white/80 hover:text-white text-sm font-medium transition"
+          style={{ animationDelay: `${boards.length * 60}ms` }}
+          className="animate-slide-up w-48 h-28 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 border-2 border-dashed border-white/30 hover:border-white/50 flex flex-col items-center justify-center text-white/70 hover:text-white gap-1 transition-all duration-200"
         >
-          + New Board
+          <span className="text-2xl font-light leading-none">+</span>
+          <span className="text-xs font-medium">New Board</span>
         </button>
       </div>
 
       {showCreate && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 animate-fade-in">
+          <div className="animate-scale-in bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <h2 className="text-lg font-bold text-gray-800 mb-5">Create Board</h2>
             <form onSubmit={handleCreate} className="flex flex-col gap-4">
               {createError && (
@@ -150,7 +157,7 @@ export default function BoardsPage() {
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-shadow"
                   placeholder="My Project"
                 />
               </div>
@@ -160,7 +167,7 @@ export default function BoardsPage() {
                   rows={3}
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none"
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none transition-shadow"
                   placeholder="What is this board about?"
                 />
               </div>
@@ -168,14 +175,14 @@ export default function BoardsPage() {
                 <button
                   type="button"
                   onClick={() => setShowCreate(false)}
-                  className="flex-1 border border-gray-300 rounded-lg py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                  className="flex-1 border border-gray-300 rounded-lg py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 active:scale-95 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="flex-1 bg-[#0079bf] hover:bg-[#026aa7] disabled:opacity-50 text-white text-sm font-semibold rounded-lg py-2 transition-colors"
+                  className="flex-1 bg-[#0079bf] hover:bg-[#026aa7] disabled:opacity-50 active:scale-95 text-white text-sm font-semibold rounded-lg py-2 transition-all"
                 >
                   {creating ? 'Creating…' : 'Create'}
                 </button>

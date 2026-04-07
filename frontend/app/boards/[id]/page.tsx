@@ -79,7 +79,7 @@ function DraggableCard({
   const { attributes, listeners, setNodeRef: setDragRef, transform, isDragging } = useDraggable({
     id: card.id,
   });
-  const { setNodeRef: setDropRef } = useDroppable({ id: card.id });
+  const { setNodeRef: setDropRef } = useDroppable({ id: `card-drop-${card.id}` });
 
   const setRef = (el: HTMLElement | null) => {
     setDragRef(el);
@@ -277,18 +277,18 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
     if (!over || !board) return;
 
     const cardId = Number(active.id);
-    const overId = Number(over.id);
+    const overIdRaw = String(over.id);
 
-    // over could be a list ID or a card ID — resolve to a list ID
-    const isOverList = board.lists.some((l) => l.id === overId);
+    // over could be a list ID (numeric) or a card-drop zone (`card-drop-N`)
     let targetListId: number;
-    if (isOverList) {
-      targetListId = overId;
-    } else {
-      // over is a card — find which list it belongs to
-      const overCard = board.lists.flatMap((l) => l.cards).find((c) => c.id === overId);
+    if (overIdRaw.startsWith('card-drop-')) {
+      const overCardId = Number(overIdRaw.replace('card-drop-', ''));
+      const overCard = board.lists.flatMap((l) => l.cards).find((c) => c.id === overCardId);
       if (!overCard) return;
       targetListId = overCard.listId;
+    } else {
+      targetListId = Number(overIdRaw);
+      if (!board.lists.some((l) => l.id === targetListId)) return;
     }
 
     const sourceCard = board.lists.flatMap((l) => l.cards).find((c) => c.id === cardId);

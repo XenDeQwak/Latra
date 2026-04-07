@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, BadRequestException } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -20,7 +20,9 @@ export class BoardsController {
 
   @Get()
   findAll(@Query('userId') userId: string) {
-    return this.boardsService.findAll(+userId);
+    const id = parseInt(userId, 10);
+    if (isNaN(id)) throw new BadRequestException('userId must be a valid number');
+    return this.boardsService.findAll(id);
   }
 
   @Get(':id')

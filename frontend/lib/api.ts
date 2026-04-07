@@ -28,7 +28,7 @@ export const apiSignup = (email: string, username: string, password: string) =>
   });
 
 // Boards
-export const getBoards = () => request<Board[]>('/boards');
+export const getBoards = (userId: number) => request<Board[]>(`/boards?userId=${userId}`);
 
 export const getBoard = (id: number) => request<Board>(`/boards/${id}`);
 

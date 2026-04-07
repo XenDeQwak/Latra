@@ -35,8 +35,9 @@ export class BoardsService {
     });
   }
 
-  findAll() {
+  findAll(userId: number) {
     return this.prisma.board.findMany({
+      where: { users: { some: { id: userId } } },
       include: {
         lists: {
           include: {

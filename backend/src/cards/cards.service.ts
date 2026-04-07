@@ -3,6 +3,7 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { PrismaClient } from '@prisma/client';
 import { Status } from '@prisma/client';
+import { AddUserToCardRequest } from './dto/AddUserToCardRequest';
 
 const prisma = new PrismaClient();
 @Injectable()
@@ -55,6 +56,17 @@ export class CardsService {
     return prisma.card.update({
       where: { id },
       data: updateCardDto,
+    });
+  }
+
+  addUserToCard(addUserToCardRequest: AddUserToCardRequest) {
+    return prisma.card.update({
+      where: { id: addUserToCardRequest.cardId },
+      data: {
+        assignedUsers: {
+          connect: { id: addUserToCardRequest.userId }
+        }
+      }
     });
   }
 

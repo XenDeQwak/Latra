@@ -43,6 +43,8 @@ model Card {
 
   listId Int
   list   List   @relation(fields: [listId], references: [id])
+
+  assignedUsers User[] @relation("CardAssignees")
 }
 
 model User {
@@ -52,6 +54,7 @@ model User {
   password String
 
   boards Board[] @relation("UserBoards")
+  assignedCards Card[] @relation("CardAssignees")
 }
 
 generator client {

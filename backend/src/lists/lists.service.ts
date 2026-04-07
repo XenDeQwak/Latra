@@ -17,11 +17,16 @@ export class ListsService {
   }
 
   findAll() {
-    return `This action returns all lists`;
+    return prisma.list.findMany({
+      include: { cards: true },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} list`;
+    return prisma.list.findUnique({
+      where: { id },
+      include: { cards: true },
+    });
   }
 
   update(id: number, updateListDto: UpdateListDto) {

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { apiSignup } from '@/lib/api';
 
 export default function SignupPage() {
-  const { setUser } = useAuth();
+  const { user, setUser, isLoading } = useAuth();
   const router = useRouter();
 
   const [email, setEmail] = useState('');
@@ -16,13 +16,17 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (!isLoading && user) router.replace('/boards');
+  }, [user, isLoading, router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const user = await apiSignup(email, username, password);
-      setUser(user);
+      const u = await apiSignup(email, username, password);
+      setUser(u);
       router.push('/boards');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed');
@@ -30,6 +34,8 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
+
+  if (isLoading || user) return null;
 
   return (
     <div className="flex flex-1 items-center justify-center py-16 px-4">

@@ -1,23 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     logout();
     router.push('/login');
   };
 
+  const isAuthPage = pathname === '/login' || pathname === '/signup';
+
   return (
     <nav className="bg-indigo-700 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
-          <Link href="/boards" className="text-xl font-bold tracking-tight hover:text-indigo-200 transition-colors">
+          <Link href="/" className="text-xl font-bold tracking-tight hover:text-indigo-200 transition-colors">
             Latra
           </Link>
           <div className="flex items-center gap-4">
@@ -33,7 +36,7 @@ export default function Navbar() {
                   Logout
                 </button>
               </>
-            ) : (
+            ) : !isAuthPage ? (
               <>
                 <Link href="/login" className="text-sm hover:text-indigo-200 transition-colors">
                   Login
@@ -45,7 +48,7 @@ export default function Navbar() {
                   Sign up
                 </Link>
               </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

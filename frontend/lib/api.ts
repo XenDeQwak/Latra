@@ -1,4 +1,4 @@
-import type { Board, Card, Status, User } from './types';
+import type { Board, Card, List, Status, User } from './types';
 
 const API_BASE = 'http://localhost:3001';
 
@@ -86,3 +86,19 @@ export const addUserToCard = (cardId: number, userId: number) =>
 
 // Users
 export const getUsers = () => request<User[]>('/users');
+
+// Lists
+export const createList = (title: string, boardId: number) =>
+  request<List>('/lists', {
+    method: 'POST',
+    body: JSON.stringify({ title, boardId }),
+  });
+
+export const updateList = (id: number, title: string) =>
+  request<List>(`/lists/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ title }),
+  });
+
+export const deleteList = (id: number) =>
+  request<List>(`/lists/${id}`, { method: 'DELETE' });

@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { AddUserToBoardRequest } from './dto/AddUserToBoardRequest';
 
 @Controller('boards')
 export class BoardsController {
@@ -10,6 +11,11 @@ export class BoardsController {
   @Post()
   create(@Body() createBoardDto: CreateBoardDto) {
     return this.boardsService.create(createBoardDto);
+  }
+
+  @Post('add-user')
+  addUserToBoard(@Body() addUserToBoardRequest: AddUserToBoardRequest) {
+    return this.boardsService.addUserToBoard(addUserToBoardRequest);
   }
 
   @Get()

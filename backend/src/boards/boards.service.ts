@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { PrismaClient } from '@prisma/client';
+import { AddUserToBoardRequest } from './dto/AddUserToBoardRequest';
 
 const prisma = new PrismaClient();
 
@@ -24,12 +25,12 @@ export class BoardsService {
     });
   }
 
-  addUserToBoard(boardId: number, userId: number) {
+  addUserToBoard(addUserToBoardRequest: AddUserToBoardRequest) {
     return prisma.board.update({
-      where: { id: boardId },
+      where: { id: addUserToBoardRequest.boardId },
       data: {
         users: {
-          connect: { id: userId }
+          connect: { id: addUserToBoardRequest.userId }
         }
       }
     });

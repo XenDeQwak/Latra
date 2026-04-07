@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ListsService {
+
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createListDto: CreateListDto) {
-    return prisma.list.create({
+    return this.prisma.list.create({
       data: {
         title: createListDto.title,
         boardId: createListDto.boardId
@@ -17,20 +18,20 @@ export class ListsService {
   }
 
   findAll() {
-    return prisma.list.findMany({
+    return this.prisma.list.findMany({
       include: { cards: true },
     });
   }
 
   findOne(id: number) {
-    return prisma.list.findUnique({
+    return this.prisma.list.findUnique({
       where: { id },
       include: { cards: true },
     });
   }
 
   update(id: number, updateListDto: UpdateListDto) {
-    return prisma.list.update({
+    return this.prisma.list.update({
       where: { id },
       data: {
         title: updateListDto.title
@@ -39,7 +40,7 @@ export class ListsService {
   }
 
   remove(id: number) {
-    return prisma.list.delete({
+    return this.prisma.list.delete({
       where: { id }
     })
   }

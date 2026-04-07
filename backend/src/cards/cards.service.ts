@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { PrismaClient } from '@prisma/client';
 import { Status } from '@prisma/client';
 import { AddUserToCardRequest } from './dto/AddUserToCardRequest';
+import { PrismaService } from 'src/prisma.service';
 
-const prisma = new PrismaClient();
 @Injectable()
 export class CardsService {
+  constructor(private readonly prisma: PrismaService) {}
   create(createCardDto: CreateCardDto) {
-    return prisma.card.create({
+    return this.prisma.card.create({
       data: createCardDto
     });
   }
 
   findAll() {
-    return prisma.card.findMany({
+    return this.prisma.card.findMany({
       include: {
         assignedUsers: {
           select: { id: true, username: true, email: true },
@@ -25,7 +25,7 @@ export class CardsService {
   }
 
   findOne(id: number) {
-    return prisma.card.findUnique({
+    return this.prisma.card.findUnique({
       where: { id },
       include: {
         assignedUsers: {
@@ -45,19 +45,19 @@ export class CardsService {
 
     // if any change in status, move the card to the corresponding list
     if (updateCardDto.status) {
-      const card = await prisma.card.findUnique({
+      const card = await this.prisma.card.findUnique({
         where: { id },
         include: { list: true }
       });
 
-      const targetList = await prisma.list.findFirst({
+      const targetList = await this.prisma.list.findFirst({
         where: {
           title: listTitleMap[updateCardDto.status],
           boardId: card?.list.boardId,
         }
       });
 
-      return prisma.card.update({
+      return this.prisma.card.update({
         where: { id },
         data: {
           ...updateCardDto,
@@ -66,14 +66,14 @@ export class CardsService {
       });
     }
 
-    return prisma.card.update({
+    return this.prisma.card.update({
       where: { id },
       data: updateCardDto,
     });
   }
 
   addUserToCard(addUserToCardRequest: AddUserToCardRequest) {
-    return prisma.card.update({
+    return this.prisma.card.update({
       where: { id: addUserToCardRequest.cardId },
       data: {
         assignedUsers: {
@@ -84,7 +84,7 @@ export class CardsService {
   }
 
   remove(id: number) {
-    return prisma.card.delete({
+    return this.prisma.card.delete({
       where: { id }
     });
   }

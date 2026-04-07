@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { PrismaClient } from '@prisma/client';
 import { AddUserToBoardRequest } from './dto/AddUserToBoardRequest';
-
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class BoardsService {
+  constructor(private readonly prisma: PrismaService) {}
   create(createBoardDto: CreateBoardDto) {
-    return prisma.board.create({
+    return this.prisma.board.create({
       data: {
         title: createBoardDto.title,
         description: createBoardDto.description,
@@ -26,7 +25,7 @@ export class BoardsService {
   }
 
   addUserToBoard(addUserToBoardRequest: AddUserToBoardRequest) {
-    return prisma.board.update({
+    return this.prisma.board.update({
       where: { id: addUserToBoardRequest.boardId },
       data: {
         users: {
@@ -37,7 +36,7 @@ export class BoardsService {
   }
 
   findAll() {
-    return prisma.board.findMany({
+    return this.prisma.board.findMany({
       include: {
         lists: {
           include: {
@@ -56,7 +55,7 @@ export class BoardsService {
   }
 
   findOne(id: number) {
-    return prisma.board.findUnique({
+    return this.prisma.board.findUnique({
       where: { id },
       include: {
         lists: {
@@ -76,7 +75,7 @@ export class BoardsService {
   }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {
-    return prisma.board.update({
+    return this.prisma.board.update({
       where: { id },
       data: {
         title: updateBoardDto.title
@@ -85,7 +84,7 @@ export class BoardsService {
   }
 
   remove(id: number) {
-    return prisma.board.delete({
+    return this.prisma.board.delete({
       where: { id }
     });
   }

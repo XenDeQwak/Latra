@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { BoardsController } from './boards.controller';
+import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [BoardsController],
-  providers: [BoardsService],
+  providers: [BoardsService, PrismaService],
 })
 export class BoardsModule {}

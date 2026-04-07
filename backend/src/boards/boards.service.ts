@@ -10,7 +10,15 @@ export class BoardsService {
   create(createBoardDto: CreateBoardDto) {
     return prisma.board.create({
       data: {
-        title: createBoardDto.title
+        title: createBoardDto.title,
+        lists: {
+          create: [
+              { title: 'To-Do' },
+              { title: 'In Progress' },
+              { title: 'In Review'},
+              { title: 'Done' },
+          ]
+        }
       }
     });
   }

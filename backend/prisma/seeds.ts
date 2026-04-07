@@ -15,6 +15,7 @@ async function main() {
         create: [
           { title: 'To-Do' },
           { title: 'In Progress' },
+          { title: 'In Review'},
           { title: 'Done' },
         ],
       },

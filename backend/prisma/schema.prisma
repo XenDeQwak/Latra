@@ -6,8 +6,10 @@
 model Board {
   id    Int    @id @default(autoincrement())
   title String
+  description String
 
   lists List[]
+  users User[] @relation("UserBoards")
 }
 
 model List {
@@ -41,6 +43,15 @@ model Card {
 
   listId Int
   list   List   @relation(fields: [listId], references: [id])
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String
+  password String
+
+  boards Board[] @relation("UserBoards")
 }
 
 generator client {

@@ -23,6 +23,17 @@ export class BoardsService {
     });
   }
 
+  addUserToBoard(boardId: number, userId: number) {
+    return prisma.board.update({
+      where: { id: boardId },
+      data: {
+        users: {
+          connect: { id: userId }
+        }
+      }
+    });
+  }
+
   findAll() {
     return `This action returns all boards`;
   }

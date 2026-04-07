@@ -10,11 +10,7 @@ export class CardsService {
   create(createCardDto: CreateCardDto) {
     return prisma.card.create({
       data: {
-        title: createCardDto.title,
-        description: createCardDto.description,
-        status: createCardDto.status,
-        deadline: createCardDto.deadline,
-        listId: createCardDto.listId,
+        ...createCardDto
       }
     });
   }
@@ -27,16 +23,40 @@ export class CardsService {
     return `This action returns a #${id} card`;
   }
 
-  update(id: number, updateCardDto: UpdateCardDto) {
+  async update(id: number, updateCardDto: UpdateCardDto) {
+    const listTitleMap = {
+      [Status.TODO]: 'To-Do',
+      [Status.IN_PROGRESS]: 'In Progress',
+      [Status.REVIEW]: 'In Review',
+      [Status.DONE]: 'Done',
+    };
+
+    // if any change in status, move the card to the corresponding list
+    if (updateCardDto.status) {
+      const card = await prisma.card.findUnique({
+        where: { id },
+        include: { list: true }
+      });
+
+      const targetList = await prisma.list.findFirst({
+        where: {
+          title: listTitleMap[updateCardDto.status],
+          boardId: card?.list.boardId,
+        }
+      });
+
+      return prisma.card.update({
+        where: { id },
+        data: {
+          ...updateCardDto,
+          listId: targetList?.id,
+        }
+      });
+    }
+
     return prisma.card.update({
       where: { id },
-      data: {
-        title: updateCardDto.title,
-        description: updateCardDto.description,
-        status: updateCardDto.status,
-        deadline: updateCardDto.deadline,
-        listId: updateCardDto.listId,
-      }
+      data: updateCardDto,
     });
   }
 

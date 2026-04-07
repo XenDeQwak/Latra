@@ -28,7 +28,7 @@ export default function LoginPage() {
       setUser(u);
       router.push('/boards');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed');
+      setError(err instanceof Error ? 'Invalid email or password' : 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }

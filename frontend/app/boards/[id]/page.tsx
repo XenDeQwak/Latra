@@ -79,7 +79,7 @@ function DraggableCard({
   const { attributes, listeners, setNodeRef: setDragRef, transform, isDragging } = useDraggable({
     id: card.id,
   });
-  const { setNodeRef: setDropRef } = useDroppable({ id: `card-drop-${card.id}` });
+  const { setNodeRef: setDropRef } = useDroppable({ id: `card-drop-${String(card.id)}` });
 
   const setRef = (el: HTMLElement | null) => {
     setDragRef(el);

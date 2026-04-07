@@ -15,11 +15,24 @@ export class CardsService {
   }
 
   findAll() {
-    return `This action returns all cards`;
+    return prisma.card.findMany({
+      include: {
+        assignedUsers: {
+          select: { id: true, username: true, email: true },
+        },
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} card`;
+    return prisma.card.findUnique({
+      where: { id },
+      include: {
+        assignedUsers: {
+          select: { id: true, username: true, email: true },
+        },
+      },
+    });
   }
 
   async update(id: number, updateCardDto: UpdateCardDto) {

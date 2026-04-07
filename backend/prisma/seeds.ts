@@ -11,6 +11,7 @@ async function main() {
   const board = await prisma.board.create({
     data: {
       title: 'My Board',
+      description: 'Default project board',
       lists: {
         create: [
           { title: 'To-Do' },

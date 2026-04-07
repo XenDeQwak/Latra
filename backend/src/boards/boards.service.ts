@@ -37,11 +37,42 @@ export class BoardsService {
   }
 
   findAll() {
-    return `This action returns all boards`;
+    return prisma.board.findMany({
+      include: {
+        lists: {
+          include: {
+            cards: {
+              include: {
+                assignedUsers: {
+                  select: { id: true, username: true, email: true },
+                },
+              },
+            },
+          },
+        },
+        users: { select: { id: true, username: true, email: true } },
+      },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} board`;
+    return prisma.board.findUnique({
+      where: { id },
+      include: {
+        lists: {
+          include: {
+            cards: {
+              include: {
+                assignedUsers: {
+                  select: { id: true, username: true, email: true },
+                },
+              },
+            },
+          },
+        },
+        users: { select: { id: true, username: true, email: true } },
+      },
+    });
   }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {

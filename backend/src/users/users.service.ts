@@ -20,11 +20,16 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return prisma.user.findMany({
+      select: { id: true, username: true, email: true },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return prisma.user.findUnique({
+      where: { id },
+      select: { id: true, username: true, email: true },
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

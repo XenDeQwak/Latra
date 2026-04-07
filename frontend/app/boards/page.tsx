@@ -90,19 +90,18 @@ export default function BoardsPage() {
 
       <div className="flex flex-wrap gap-4">
         {boards.map((board) => (
-          <div
+          <Link
             key={board.id}
+            href={`/boards/${board.id}`}
+            aria-label={`Open board: ${board.title}`}
             className={`group relative w-48 h-28 rounded-lg cursor-pointer ${palette[board.id % palette.length]} flex flex-col justify-between p-3 hover:brightness-110 transition`}
           >
             <div className="flex items-start justify-between">
-              <Link
-                href={`/boards/${board.id}`}
-                className="text-white font-bold text-sm leading-snug line-clamp-2 flex-1"
-              >
+              <span className="text-white font-bold text-sm leading-snug line-clamp-2 flex-1">
                 {board.title}
-              </Link>
+              </span>
               <button
-                onClick={(e) => { e.preventDefault(); handleDelete(board.id); }}
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(board.id); }}
                 className="opacity-0 group-hover:opacity-100 text-white/70 hover:text-white transition-all text-xs ml-1 shrink-0"
                 aria-label="Delete board"
               >
@@ -122,7 +121,7 @@ export default function BoardsPage() {
                 ))}
               </div>
             )}
-          </div>
+          </Link>
         ))}
 
         {/* + New Board tile */}

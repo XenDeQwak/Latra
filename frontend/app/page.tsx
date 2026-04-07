@@ -15,7 +15,6 @@ export default function Home() {
     }
   }, [user, isLoading, router]);
 
-  if (isLoading) return null;
   if (user) return null;
 
   return (

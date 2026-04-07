@@ -1,11 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 @Injectable()
 export class CardsService {
   create(createCardDto: CreateCardDto) {
-    return 'This action adds a new card';
+    return prisma.card.create({
+      data: {
+        title: createCardDto.title,
+        description: createCardDto.description,
+        isDone: createCardDto.isDone,
+        deadline: createCardDto.deadline,
+        listId: createCardDto.listId,
+      }
+    });
   }
 
   findAll() {
@@ -17,10 +27,21 @@ export class CardsService {
   }
 
   update(id: number, updateCardDto: UpdateCardDto) {
-    return `This action updates a #${id} card`;
+    return prisma.card.update({
+      where: { id },
+      data: {
+        title: updateCardDto.title,
+        description: updateCardDto.description,
+        isDone: updateCardDto.isDone,
+        deadline: updateCardDto.deadline,
+        listId: updateCardDto.listId,
+      }
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} card`;
+    return prisma.card.delete({
+      where: { id }
+    });
   }
 }

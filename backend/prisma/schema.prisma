@@ -27,6 +27,8 @@ model Card {
   title  String
   description String
   isDone Boolean
+  deadline DateTime
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

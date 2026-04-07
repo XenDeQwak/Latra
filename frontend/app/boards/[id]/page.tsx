@@ -283,8 +283,11 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
 
     try {
       if (newStatus) {
+        // Status column: updating status is enough — the backend automatically
+        // moves the card to the matching list (To-Do/In Progress/In Review/Done).
         await updateCard(cardId, { status: newStatus });
       } else {
+        // Custom list: no status enum exists, so move by listId directly.
         await updateCard(cardId, { listId: targetListId });
       }
       await reload();

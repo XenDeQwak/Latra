@@ -54,6 +54,7 @@ model User {
   password String
 
   boards Board[] @relation("UserBoards")
+  
   assignedCards Card[] @relation("CardAssignees")
 }
 

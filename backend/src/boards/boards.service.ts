@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 @Injectable()
 export class BoardsService {
   create(createBoardDto: CreateBoardDto) {
-    return 'This action adds a new board';
+    return prisma.board.create({
+      data: {
+        title: createBoardDto.title
+      }
+    });
   }
 
   findAll() {
@@ -17,7 +24,12 @@ export class BoardsService {
   }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {
-    return `This action updates a #${id} board`;
+    return prisma.board.update({
+      where: { id },
+      data: {
+        title: updateBoardDto.title
+      }
+    });
   }
 
   remove(id: number) {

@@ -76,9 +76,15 @@ function DraggableCard({
   onDelete: (cardId: number) => void;
   onAssign: (cardId: number, userId: number) => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+  const { attributes, listeners, setNodeRef: setDragRef, transform, isDragging } = useDraggable({
     id: card.id,
   });
+  const { setNodeRef: setDropRef } = useDroppable({ id: card.id });
+
+  const setRef = (el: HTMLElement | null) => {
+    setDragRef(el);
+    setDropRef(el);
+  };
 
   const style = transform
     ? { transform: CSS.Translate.toString(transform) }
@@ -88,7 +94,7 @@ function DraggableCard({
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setRef}
       style={style}
       {...attributes}
       className={`bg-white rounded-lg shadow-sm border border-gray-100 p-3 flex flex-col gap-2 group cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-40 shadow-lg' : ''}`}
@@ -271,7 +277,19 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
     if (!over || !board) return;
 
     const cardId = Number(active.id);
-    const targetListId = Number(over.id);
+    const overId = Number(over.id);
+
+    // over could be a list ID or a card ID — resolve to a list ID
+    const isOverList = board.lists.some((l) => l.id === overId);
+    let targetListId: number;
+    if (isOverList) {
+      targetListId = overId;
+    } else {
+      // over is a card — find which list it belongs to
+      const overCard = board.lists.flatMap((l) => l.cards).find((c) => c.id === overId);
+      if (!overCard) return;
+      targetListId = overCard.listId;
+    }
 
     const sourceCard = board.lists.flatMap((l) => l.cards).find((c) => c.id === cardId);
     if (!sourceCard || sourceCard.listId === targetListId) return;
@@ -283,11 +301,8 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
 
     try {
       if (newStatus) {
-        // Status column: updating status is enough — the backend automatically
-        // moves the card to the matching list (To-Do/In Progress/In Review/Done).
         await updateCard(cardId, { status: newStatus });
       } else {
-        // Custom list: no status enum exists, so move by listId directly.
         await updateCard(cardId, { listId: targetListId });
       }
       await reload();

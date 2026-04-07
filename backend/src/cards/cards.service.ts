@@ -9,9 +9,7 @@ const prisma = new PrismaClient();
 export class CardsService {
   create(createCardDto: CreateCardDto) {
     return prisma.card.create({
-      data: {
-        ...createCardDto
-      }
+      data: createCardDto
     });
   }
 

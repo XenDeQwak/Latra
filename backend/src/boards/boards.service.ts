@@ -11,6 +11,7 @@ export class BoardsService {
     return prisma.board.create({
       data: {
         title: createBoardDto.title,
+        description: createBoardDto.description,
         lists: {
           create: [
               { title: 'To-Do' },

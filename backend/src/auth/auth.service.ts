@@ -2,20 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { LoginRequest } from './dto/LoginRequest';
 import { SignupRequest } from './dto/SignupRequest';
+import * as bcrypt from 'bcrypt';
 
 
 const prisma = new PrismaClient();
 @Injectable()
 export class AuthService {
-    login(loginRequest: LoginRequest) {
-        const user = prisma.user.findUnique({
+    async login(loginRequest: LoginRequest) {
+        const user = await prisma.user.findUnique({
             where: {
-                email: loginRequest.email,
-                password: loginRequest.password
+                email: loginRequest.email
             }
         });
 
         if (!user) {
+            throw new Error('Invalid email or password');
+        }
+
+        const isMatch = await bcrypt.compare(loginRequest.password, user.password);
+
+        if (!isMatch) {
             throw new Error('Invalid email or password');
         }
 

@@ -22,11 +22,18 @@ model List {
   cards   Card[]
 }
 
+enum Status {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
 model Card {
   id     Int    @id @default(autoincrement())
   title  String
   description String
-  isDone Boolean
+  status Status @default(TODO)
   deadline DateTime
 
   createdAt DateTime @default(now())

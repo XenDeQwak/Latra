@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { PrismaClient } from '@prisma/client';
+import { Status } from '@prisma/client';
 
 const prisma = new PrismaClient();
 @Injectable()
@@ -11,7 +12,7 @@ export class CardsService {
       data: {
         title: createCardDto.title,
         description: createCardDto.description,
-        isDone: createCardDto.isDone,
+        status: createCardDto.status,
         deadline: createCardDto.deadline,
         listId: createCardDto.listId,
       }
@@ -32,7 +33,7 @@ export class CardsService {
       data: {
         title: updateCardDto.title,
         description: updateCardDto.description,
-        isDone: updateCardDto.isDone,
+        status: updateCardDto.status,
         deadline: updateCardDto.deadline,
         listId: updateCardDto.listId,
       }

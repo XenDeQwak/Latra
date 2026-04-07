@@ -1,7 +1,9 @@
+import { Status } from '@prisma/client';
+
 export class CreateCardDto {
     title!: string
     description!: string
-    isDone!: boolean
+    status?: Status
     deadline!: Date
     listId!: number
 }

@@ -85,8 +85,23 @@ export class BoardsService {
   }
 
   remove(id: number) {
-    return this.prisma.board.delete({
-      where: { id }
+    return this.prisma.$transaction(async (tx) => {
+      
+      await tx.card.deleteMany({
+        where: {
+          list: {
+            boardId: id,
+          },
+        },
+      });
+
+      await tx.list.deleteMany({
+        where: { boardId: id },
+      });
+
+      return tx.board.delete({
+        where: { id },
+      });
     });
   }
 }

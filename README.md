@@ -64,10 +64,16 @@ DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/latra"
 ### NOTE
 If you have received a .env file in the mail, copy and paste the database URL link there instead.
 
-Run migrations and seed the database:
+Run migrations:
 
 ```bash
 npx prisma migrate dev
+```
+
+Enter your desired name for the migration. Afterwards, generate the prisma client:
+
+```bash
+npx prisma generate
 ```
 
 Start the development server:

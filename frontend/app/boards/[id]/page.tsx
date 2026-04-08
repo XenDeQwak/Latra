@@ -109,6 +109,7 @@ function DraggableCard({
       style={style}
       {...attributes}
       {...listeners}
+      title="Drag to move"
       className={`bg-white rounded-xl shadow-sm border border-gray-100 border-l-4 ${leftBorder} p-3.5 flex flex-col gap-2.5 group cursor-grab active:cursor-grabbing transition-all duration-150 ${isDragging ? 'opacity-30 scale-95' : 'hover:-translate-y-0.5 hover:shadow-md'}`}
     >
       {/* Title row + actions */}

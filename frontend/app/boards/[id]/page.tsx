@@ -108,10 +108,12 @@ function DraggableCard({
       ref={setRef}
       style={style}
       {...attributes}
+      {...listeners}
+      title="Drag to move"
       className={`bg-white rounded-xl shadow-sm border border-gray-100 border-l-4 ${leftBorder} p-3.5 flex flex-col gap-2.5 group cursor-grab active:cursor-grabbing transition-all duration-150 ${isDragging ? 'opacity-30 scale-95' : 'hover:-translate-y-0.5 hover:shadow-md'}`}
     >
       {/* Title row + actions */}
-      <div {...listeners} className="flex items-start justify-between gap-2" title="Drag to move">
+      <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-semibold text-gray-800 leading-snug flex-1">{card.title}</p>
         <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
@@ -490,7 +492,7 @@ export default function BoardPage({ params }: { params: Promise<{ id: string }> 
   const totalCards = board.lists.reduce((sum, l) => sum + l.cards.length, 0);
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
+    <div className="flex flex-col flex-1 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
       {/* Board header */}
       <div className="border-b border-white/10 bg-black/20 backdrop-blur-sm px-6 py-4 animate-fade-in">
         <div className="max-w-full flex items-center justify-between gap-4">
